@@ -13,6 +13,14 @@ namespace UwpCompanion
     class MqttClient
     {
 
+        private string topic;
+
+        public MqttClient(string topic)
+        {
+            this.topic = topic;
+        }
+
+
         public async Task Connect()
         {
             var factory = new MqttFactory();

@@ -25,8 +25,21 @@ namespace UwpCompanion
             }
 
             this.currentSession = currentSession;
+            currentSession.MediaPropertiesChanged += CurrentSession_MediaPropertiesChanged;
+            currentSession.PlaybackInfoChanged += CurrentSession_PlaybackInfoChanged;
             isInitialized = true;
         }
+
+        private void CurrentSession_PlaybackInfoChanged(GlobalSystemMediaTransportControlsSession sender, PlaybackInfoChangedEventArgs args)
+        {
+            Console.WriteLine("Playback info changed.");
+        }
+
+        private void CurrentSession_MediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
+        {
+            Console.WriteLine("Media changed.");
+        }
+
         public async Task Pause()
         {
             EnsureInitialized();
@@ -45,10 +58,10 @@ namespace UwpCompanion
             await currentSession.TryTogglePlayPauseAsync();
         }
 
-        public async Task<MediaProperties> GetMediaInfo()
+        public async Task<MediaInfo> GetMediaInfo()
         {
             var systemMediaProperties = await currentSession.TryGetMediaPropertiesAsync();
-            return new MediaProperties()
+            return new MediaInfo()
             {
                 Artist = systemMediaProperties.Artist,
                 Title = systemMediaProperties.Title
@@ -61,6 +74,22 @@ namespace UwpCompanion
             {
                 throw new Exception("Media controls must be initialized first.");
             }
+        }
+
+        protected virtual void OnMediaInfoChanged(MediaInfoChangedEventArgs e)
+        {
+            var handler = MediaInfoChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public event EventHandler<MediaInfoChangedEventArgs> MediaInfoChanged;
+
+        public class MediaInfoChangedEventArgs : EventArgs
+        {
+            public MediaInfo mediaProperties { get; set; }
         }
 
     }

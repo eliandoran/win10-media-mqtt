@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UwpCompanion
 {
-    class MediaProperties
+    class MediaInfo
     {
         public string Artist { get; set; }
 
