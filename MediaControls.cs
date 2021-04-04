@@ -33,6 +33,12 @@ namespace UwpCompanion
             await currentSession.TryPauseAsync();
         }
 
+        public async Task Play()
+        {
+            EnsureInitialized();
+            await currentSession.TryPlayAsync();
+        }
+
         private void EnsureInitialized()
         {
             if (!isInitialized)

@@ -9,7 +9,7 @@ namespace UwpCompanion
         {
             var mediaControls = new MediaControls();
             await mediaControls.Initialize();
-            await mediaControls.Pause();
+            await mediaControls.Play();
         }
     }
 }
