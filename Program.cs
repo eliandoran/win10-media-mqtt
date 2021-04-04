@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace UwpCompanion
@@ -7,14 +8,15 @@ namespace UwpCompanion
     {
         static async Task Main(string[] args)
         {
-            var mediaControls = new MediaControls();
-            await mediaControls.Initialize();
-            
-            var mediaProperties = await mediaControls.GetMediaInfo();
-            if (mediaProperties != null)
+            var mqttClient = new MqttClient();
+
+            try
             {
-                Console.WriteLine("Title:  {0}", mediaProperties.Title);
-                Console.WriteLine("Artist: {0}", mediaProperties.Artist);
+                await mqttClient.Connect();
+                Console.WriteLine("Connected to MQTT.");
+            } catch (ConnectivityError)
+            {
+                Console.WriteLine("Unable to connect to MQTT broker.");
             }
         }
     }

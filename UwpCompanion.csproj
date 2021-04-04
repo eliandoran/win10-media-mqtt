@@ -13,4 +13,8 @@
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MQTTnet" Version="3.0.15" />
+  </ItemGroup>
+
 </Project>
