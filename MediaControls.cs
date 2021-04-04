@@ -70,6 +70,18 @@ namespace UwpCompanion
             await currentSession.TryTogglePlayPauseAsync();
         }
 
+        public async Task SkipPrevious()
+        {
+            EnsureInitialized();
+            await currentSession.TrySkipPreviousAsync();
+        }
+
+        public async Task SkipNext()
+        {
+            EnsureInitialized();
+            await currentSession.TrySkipNextAsync();
+        }
+
         public async Task<MediaInfo> GetMediaInfo()
         {
             var systemMediaProperties = await currentSession.TryGetMediaPropertiesAsync();

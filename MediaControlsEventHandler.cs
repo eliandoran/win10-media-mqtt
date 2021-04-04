@@ -54,6 +54,12 @@ namespace UwpCompanion
                 case "play":
                     mediaControls.Play();
                     break;
+                case "previous":
+                    mediaControls.SkipPrevious();
+                    break;
+                case "next":
+                    mediaControls.SkipNext();
+                    break;
             }
         }
 
