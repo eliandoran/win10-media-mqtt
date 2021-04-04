@@ -21,14 +21,26 @@ namespace UwpCompanion
         public void Initialize()
         {
             mediaControls.MediaInfoChanged += MediaControls_MediaInfoChanged;
-        }
+            mediaControls.PlaybackStatusChanged += MediaControls_PlaybackStatusChanged;
+        }        
 
         private void MediaControls_MediaInfoChanged(object sender, MediaControls.MediaInfoChangedEventArgs e)
         {
-            var mediaInfo = e.mediaInfo;
+            var mediaInfo = e.MediaInfo;
             mqttClient.Publish("title", mediaInfo.Title);
             mqttClient.Publish("artist", mediaInfo.Artist);
-            mqttClient.Publish("playing", "true");
         }
+
+        private void MediaControls_PlaybackStatusChanged(object sender, MediaControls.PlaybackStatusEventArgs e)
+        {
+            var playbackStatus = e.PlaybackStatus;
+            mqttClient.Publish("playing", SerializeBoolean(playbackStatus.IsPlaying));
+        }
+
+        private string SerializeBoolean(bool boolValue)
+        {
+            return boolValue.ToString().ToLower();
+        }
+
     }
 }

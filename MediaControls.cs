@@ -30,9 +30,15 @@ namespace UwpCompanion
             isInitialized = true;
         }
 
-        private void CurrentSession_PlaybackInfoChanged(GlobalSystemMediaTransportControlsSession sender, PlaybackInfoChangedEventArgs args)
+        private void CurrentSession_PlaybackInfoChanged(GlobalSystemMediaTransportControlsSession sender, Windows.Media.Control.PlaybackInfoChangedEventArgs args)
         {
-            Console.WriteLine("Playback info changed.");
+            Console.WriteLine("Playback status changed.");
+
+            var newPlaybackStatus = GetPlaybackStatus();
+            OnPlaybackStatusChanged(new PlaybackStatusEventArgs()
+            {
+                PlaybackStatus = newPlaybackStatus
+            });
         }
 
         private async void CurrentSession_MediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
@@ -42,7 +48,7 @@ namespace UwpCompanion
             var newMediaInfo = await GetMediaInfo();
             OnMediaInfoChanged(new MediaInfoChangedEventArgs()
             {
-                mediaInfo = newMediaInfo
+                MediaInfo = newMediaInfo
             });
         }
 
@@ -74,6 +80,15 @@ namespace UwpCompanion
             };
         }
 
+        public PlaybackStatus GetPlaybackStatus()
+        {
+            var systemPlaybackProperties = currentSession.GetPlaybackInfo();
+            return new PlaybackStatus()
+            {
+                IsPlaying = (systemPlaybackProperties.PlaybackStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
+            };
+        }
+
         private void EnsureInitialized()
         {
             if (!isInitialized)
@@ -91,11 +106,26 @@ namespace UwpCompanion
             }
         }
 
+        protected virtual void OnPlaybackStatusChanged(PlaybackStatusEventArgs e)
+        {
+            var handler = PlaybackStatusChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
         public event EventHandler<MediaInfoChangedEventArgs> MediaInfoChanged;
+        public event EventHandler<PlaybackStatusEventArgs> PlaybackStatusChanged;
 
         public class MediaInfoChangedEventArgs : EventArgs
         {
-            public MediaInfo mediaInfo { get; set; }
+            public MediaInfo MediaInfo { get; set; }
+        }
+
+        public class PlaybackStatusEventArgs : EventArgs
+        {
+            public PlaybackStatus PlaybackStatus { get; set; }
         }
 
     }
