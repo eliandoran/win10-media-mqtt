@@ -1,4 +1,5 @@
 ﻿using MQTTnet;
+using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using MQTTnet.Exceptions;
 using System;
@@ -14,6 +15,7 @@ namespace UwpCompanion
     {
 
         private string topic;
+        private IMqttClient client;
 
         public MqttClient(string topic)
         {
@@ -32,10 +34,26 @@ namespace UwpCompanion
             try
             {
                 await client.ConnectAsync(options, CancellationToken.None);
+                this.client = client;
             } catch (MqttCommunicationException e)
             {
                 throw new ConnectivityError();
             }
+        }
+
+        public async Task Publish(string subtopic, string payload)
+        {
+           if (client == null)
+            {
+                throw new ConnectivityError();
+            }
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(topic + "/" + subtopic)
+                .WithPayload(payload)
+                .Build();
+            
+            await client.PublishAsync(message);
         }
 
     }

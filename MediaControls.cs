@@ -35,9 +35,15 @@ namespace UwpCompanion
             Console.WriteLine("Playback info changed.");
         }
 
-        private void CurrentSession_MediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
+        private async void CurrentSession_MediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
         {
-            Console.WriteLine("Media changed.");
+            Console.WriteLine("Media properties changed.");
+
+            var newMediaInfo = await GetMediaInfo();
+            OnMediaInfoChanged(new MediaInfoChangedEventArgs()
+            {
+                mediaInfo = newMediaInfo
+            });
         }
 
         public async Task Pause()
@@ -89,7 +95,7 @@ namespace UwpCompanion
 
         public class MediaInfoChangedEventArgs : EventArgs
         {
-            public MediaInfo mediaProperties { get; set; }
+            public MediaInfo mediaInfo { get; set; }
         }
 
     }
