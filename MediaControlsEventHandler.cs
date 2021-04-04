@@ -33,6 +33,7 @@ namespace UwpCompanion
             var mediaInfo = e.MediaInfo;
             mqttClient.Publish("title", mediaInfo.Title);
             mqttClient.Publish("artist", mediaInfo.Artist);
+            mqttClient.Publish("thumbnail", mediaInfo.Thumbnail);
         }
 
         private void MediaControls_PlaybackStatusChanged(object sender, MediaControls.PlaybackStatusEventArgs e)

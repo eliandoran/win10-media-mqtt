@@ -8,6 +8,7 @@ using MQTTnet.Exceptions;
 using MQTTnet.Extensions.ManagedClient;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -89,7 +90,25 @@ namespace UwpCompanion
                 .Build();
             
             await client.PublishAsync(message);
-        }        
+        }
+
+        public async Task Publish(string subtopic, Stream payload)
+        {
+            if (client == null)
+            {
+                Console.WriteLine("Client is null.");
+                return;
+            }
+
+            Console.WriteLine("Publish: " + payload);
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(GetTopic(subtopic))
+                .WithPayload(payload)
+                .Build();
+
+            await client.PublishAsync(message);
+        }
 
         private string GetTopic(string subtopic)
         {

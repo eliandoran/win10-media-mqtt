@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,10 +86,19 @@ namespace UwpCompanion
         public async Task<MediaInfo> GetMediaInfo()
         {
             var systemMediaProperties = await currentSession.TryGetMediaPropertiesAsync();
+            var thumbnail = systemMediaProperties.Thumbnail;
+            Stream thumbnailStream = null;
+
+            if (thumbnail != null)
+            {
+                thumbnailStream = (await thumbnail.OpenReadAsync()).AsStreamForRead();
+            }
+
             return new MediaInfo()
             {
                 Artist = systemMediaProperties.Artist,
-                Title = systemMediaProperties.Title
+                Title = systemMediaProperties.Title,
+                Thumbnail = thumbnailStream
             };
         }
 
