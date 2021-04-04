@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace UwpCompanion
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var mediaControls = new MediaControls();
+            await mediaControls.Initialize();
+            await mediaControls.Pause();
         }
     }
 }
