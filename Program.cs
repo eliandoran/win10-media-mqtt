@@ -9,7 +9,13 @@ namespace UwpCompanion
         {
             var mediaControls = new MediaControls();
             await mediaControls.Initialize();
-            await mediaControls.Play();
+            
+            var mediaProperties = await mediaControls.GetMediaInfo();
+            if (mediaProperties != null)
+            {
+                Console.WriteLine("Title:  {0}", mediaProperties.Title);
+                Console.WriteLine("Artist: {0}", mediaProperties.Artist);
+            }
         }
     }
 }

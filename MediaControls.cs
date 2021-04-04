@@ -39,6 +39,22 @@ namespace UwpCompanion
             await currentSession.TryPlayAsync();
         }
 
+        public async Task PlayPause()
+        {
+            EnsureInitialized();
+            await currentSession.TryTogglePlayPauseAsync();
+        }
+
+        public async Task<MediaProperties> GetMediaInfo()
+        {
+            var systemMediaProperties = await currentSession.TryGetMediaPropertiesAsync();
+            return new MediaProperties()
+            {
+                Artist = systemMediaProperties.Artist,
+                Title = systemMediaProperties.Title
+            };
+        }
+
         private void EnsureInitialized()
         {
             if (!isInitialized)
