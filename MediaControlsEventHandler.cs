@@ -23,12 +23,12 @@ namespace UwpCompanion
             mediaControls.MediaInfoChanged += MediaControls_MediaInfoChanged;
         }
 
-        private async void MediaControls_MediaInfoChanged(object sender, MediaControls.MediaInfoChangedEventArgs e)
+        private void MediaControls_MediaInfoChanged(object sender, MediaControls.MediaInfoChangedEventArgs e)
         {
             var mediaInfo = e.mediaInfo;
-            var serializedData = JsonConvert.SerializeObject(mediaInfo);
-            Console.WriteLine(serializedData);
-            await mqttClient.Publish("mediainfo", serializedData);
+            mqttClient.Publish("title", mediaInfo.Title);
+            mqttClient.Publish("artist", mediaInfo.Artist);
+            mqttClient.Publish("playing", "true");
         }
     }
 }
