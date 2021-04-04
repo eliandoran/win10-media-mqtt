@@ -20,8 +20,12 @@ namespace UwpCompanion
 
         public void Initialize()
         {
+            // Subscribe to local media events.
             mediaControls.MediaInfoChanged += MediaControls_MediaInfoChanged;
             mediaControls.PlaybackStatusChanged += MediaControls_PlaybackStatusChanged;
+
+            // Subscribe to MQTT command events.
+            mqttClient.MessageReceived += MqttClient_MessageReceived;
         }        
 
         private void MediaControls_MediaInfoChanged(object sender, MediaControls.MediaInfoChangedEventArgs e)
@@ -35,6 +39,22 @@ namespace UwpCompanion
         {
             var playbackStatus = e.PlaybackStatus;
             mqttClient.Publish("playing", SerializeBoolean(playbackStatus.IsPlaying));
+        }
+
+        private void MqttClient_MessageReceived(object sender, MqttClient.MessageReceivedEventArgs e)
+        {
+            var command = e.Payload;
+            Console.WriteLine("Got command: " + command);
+
+            switch (command)
+            {
+                case "pause":
+                    mediaControls.Pause();
+                    break;
+                case "play":
+                    mediaControls.Play();
+                    break;
+            }
         }
 
         private string SerializeBoolean(bool boolValue)
