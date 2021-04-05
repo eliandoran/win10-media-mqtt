@@ -86,19 +86,27 @@ namespace UwpCompanion
         public async Task<MediaInfo> GetMediaInfo()
         {
             var systemMediaProperties = await currentSession.TryGetMediaPropertiesAsync();
-            var thumbnail = systemMediaProperties.Thumbnail;
-            Stream thumbnailStream = null;
+            var thumbnailData = systemMediaProperties.Thumbnail;
+            var thumbnail = "";
 
-            if (thumbnail != null)
+            if (thumbnailData != null)
             {
-                thumbnailStream = (await thumbnail.OpenReadAsync()).AsStreamForRead();
+                var thumbnailStream = (await thumbnailData.OpenReadAsync()).AsStreamForRead();
+                byte[] bytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    thumbnailStream.CopyTo(memoryStream);
+                    bytes = memoryStream.ToArray();
+                }
+
+                thumbnail = Convert.ToBase64String(bytes);
             }
 
             return new MediaInfo()
             {
                 Artist = systemMediaProperties.Artist,
                 Title = systemMediaProperties.Title,
-                Thumbnail = thumbnailStream
+                Thumbnail = thumbnail
             };
         }
 

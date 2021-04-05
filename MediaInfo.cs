@@ -13,6 +13,6 @@ namespace UwpCompanion
 
         public string Title { get; set; }
 
-        public Stream Thumbnail { get; set; }
+        public string Thumbnail { get; set; }
     }
 }
